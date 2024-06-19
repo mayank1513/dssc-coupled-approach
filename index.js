@@ -7,7 +7,7 @@ const files = [];
 const listFiles = (dir) => {
   fs.readdirSync(dir).forEach((file) => {
     // Do not recurse on node_modules
-    if (file === "node_modules") return;
+    if (file === "node_modules" || file === ".git") return;
 
     // Add file to list
     const filePath = path.join(dir, file);
