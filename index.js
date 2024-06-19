@@ -12,11 +12,16 @@ const listFiles = (dir) => {
     // Add file to list
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
+    const relativePath = path.relative(__dirname, filePath);
     if (stat.isDirectory()) {
-      listFiles(filePath);
+      if (filePath.includes(" ")) {
+        const newRelativeFilePath = relativePath.replace(/ /g, "_");
+        fs.renameSync(filePath, path.resolve(__dirname, newRelativeFilePath));
+        listFiles(newRelativeFilePath);
+      } else listFiles(filePath);
     } else {
       files.push({
-        filePath: path.relative(__dirname, filePath).replace(/[/\\]/, "/"),
+        filePath: relativePath.replace(/[/\\]/, "/"),
         lastModified: stat.mtime,
       });
     }
